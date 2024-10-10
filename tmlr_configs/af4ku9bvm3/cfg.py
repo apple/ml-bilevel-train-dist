@@ -1,0 +1,70 @@
+#
+# For licensing see accompanying LICENSE file.
+# Copyright (C) 2020 Apple Inc. All Rights Reserved.
+#
+import ml_collections
+
+true = True
+false = False
+
+
+def get_config():
+    return ml_collections.ConfigDict(
+        {
+            "task": "lm",
+            "shuffle_once": false,
+            "disable_weight_logging": true,
+            "tokenizer": {"type": "byte"},
+            "model": "transformer",
+            "num_hidden_units": [256, 256, 1024],
+            "num_heads": 8,
+            "num_layers": 12,
+            "dropout_rate": 0.1,
+            "attention_dropout_rate": 0.1,
+            "shared_embeddings": true,
+            "max_length": 256,
+            "dtype": "bf16",
+            "learning_rate": 0.0002,
+            "warmup_steps": 1000,
+            "field_names": ["inputs"],
+            "generic_tsv": "data/c4/train.txt",
+            "generic_split": [35000000, 1000],
+            "specific_tsv": "data/rcv1/train.txt",
+            "specific_split": [0, 10000, 0, 1000],
+            "padded_lengths": [256],
+            "eval_sets": [
+                ["c4", "data/c4/validation.txt", false, 6000],
+                ["reuters", "data/rcv1/valid.txt", false, 5000],
+            ],
+            "meta_model": "none",
+            "meta_optimizer": "adam",
+            "meta_gradient_method": "none",
+            "meta_fields": {"inputs": "inputs", "replicate": "pos_inputs"},
+            "num_hidden_unit_weights": [256, 128, 128],
+            "meta_learning_rate": 0.001,
+            "meta_momentum": 0.9,
+            "meta_train_schedule": [1, 1],
+            "meta_classifier_params": {"top_frac": 1.0},
+            "soft_select_params": {
+                "learning_rate": 0.1,
+                "parameter_filter": "",
+            },
+            "most_aligned_grad_parameters": {
+                "parameter_filter": "",
+                "top_frac": 1.0,
+            },
+            "soba_params": {"hessian_free": false},
+            "anograd_params": {"parameter_filter": "", "sampling": "multi"},
+            "generic_weight": 0.0,
+            "generic_batch_size": 128,
+            "batch_size": 128,
+            "num_steps": 500000,
+            "seed": 0,
+            "eval_every_steps": 100,
+            "save_every_steps": 10000,
+            "keep_checkpoint_frequency": 10000,
+            "name": "c4lm downsampling=1.00 gen_w=0.000 ft280_4u9hqmpi3q_mixing",
+            "tags": ["fine_tune_280_long", "c4_reuters_lm"],
+            "init_checkpoint": "artifacts/4u9hqmpi3q/checkpoint_280000",
+        }
+    )
